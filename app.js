@@ -3,6 +3,9 @@ const bodyParser    = require('body-parser');
 const exphbs        = require('express-handlebars');
 const nodemailer    = require('nodemailer');
 const path          = require('path');
+let   datauser      = require('./data.json');
+
+
 
 const app = express();
 
@@ -24,18 +27,24 @@ app.get('/', (req, res) => {
 app.post('/send', (req, res) => {
     //console.log(req.body);
     const output = `
-        <p>Tienes un nuevo correo</p>
+        <p>Tienes un certificado vencido o por vencer.</p>
+        <p style='color: red'>Esta wea está en duro.</p>
         <h3>Detalles:</h3>
         <ul>
-            <li>Nombre: ${req.body.name}</li>
+            <li>Nombre: Cristian Tapia</li>
         </ul>
         <h3>Mensaje</h3>
-        <p>${req.body.message}</p>
+        <p>Aca debería ir info de tu certificado. Obviamente, esto es una prueba, si que no webees.</p>
     `;
 
-    let account = nodemailer.createTestAccount( (err, account) => account );
+    //let account = nodemailer.createTestAccount( (err, account) => account );
     let transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
+        service: 'gmail',
+        auth: {
+            user: datauser[0].user,
+            pass: datauser[0].pass
+        }
+        /*host: 'smtp.ethereal.email',
         port: 587,
         secure: false, // true for 465, false for other ports
         auth: {
@@ -44,15 +53,15 @@ app.post('/send', (req, res) => {
         },
         tls : {
             rejectUnauthorized: false
-        }
+        }*/
     });
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"Fred Foo 👻" <foo@example.com>', // sender address
-        to: 'amoyach@gmail.com', // list of receivers
-        subject: 'New Contact', // Subject line
-        text: 'Hello world?', // plain text body
+        from: '"Avisos DBNeT 👻" <certificadosvencidos@dbnetcorp.com>', // sender address
+        to: 'cristian.tapia@dbnetcorp.com', // list of receivers
+        subject: 'Se te venció el certificado.', // Subject line
+        text: 'El certificado que utilizas se encuentra vencido.', // plain text body
         html: output // html body
     };
 
